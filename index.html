@@ -387,6 +387,55 @@
 </head>
 <body>
 
+<!-- ═══ PASSWORD GATE ═══════════════════════════════════ -->
+<div id="gate" style="position:fixed;inset:0;background:#0e0e0e;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.8rem;">
+  <div style="text-align:center;">
+    <div style="font-family:'Helvetica Neue',sans-serif;font-size:0.55rem;letter-spacing:0.38em;text-transform:uppercase;color:rgba(184,151,90,0.6);margin-bottom:0.7rem;">Fifty Eight Degrees</div>
+    <div style="font-family:'Georgia',serif;font-size:1.6rem;color:#fff;letter-spacing:0.04em;">Longwoods</div>
+    <div style="font-family:'Helvetica Neue',sans-serif;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-top:0.4rem;">306 Longwoods Lane &nbsp;·&nbsp; Internal Portal</div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;">
+    <input id="gate-input" type="password" placeholder="Access code" maxlength="20"
+      style="background:rgba(255,255,255,0.05);border:1px solid rgba(184,151,90,0.3);border-radius:4px;color:#fff;font-family:'Helvetica Neue',sans-serif;font-size:1rem;letter-spacing:0.22em;padding:0.75rem 1.4rem;width:220px;text-align:center;outline:none;transition:border-color 0.2s;"
+      onkeydown="if(event.key==='Enter')checkGate()">
+    <div id="gate-err" style="font-family:'Helvetica Neue',sans-serif;font-size:0.62rem;letter-spacing:0.12em;color:#c04040;opacity:0;transition:opacity 0.2s;">Incorrect code</div>
+    <button onclick="checkGate()"
+      style="background:var(--gold,#b8975a);border:none;border-radius:4px;color:#0e0e0e;font-family:'Helvetica Neue',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;padding:0.7rem 2.2rem;cursor:pointer;">
+      Enter
+    </button>
+  </div>
+</div>
+<style>
+  #gate-input:focus { border-color: rgba(184,151,90,0.8); }
+  @keyframes gate-shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
+  .gate-shake { animation: gate-shake 0.35s ease; }
+</style>
+<script>
+  (function(){
+    if(sessionStorage.getItem('lw-access')==='ok'){
+      document.getElementById('gate').style.display='none';
+    }
+  })();
+  function checkGate(){
+    var inp=document.getElementById('gate-input');
+    if(inp.value==='5858'){
+      sessionStorage.setItem('lw-access','ok');
+      var g=document.getElementById('gate');
+      g.style.transition='opacity 0.4s';
+      g.style.opacity='0';
+      setTimeout(function(){g.style.display='none';},400);
+    } else {
+      var err=document.getElementById('gate-err');
+      err.style.opacity='1';
+      inp.classList.remove('gate-shake');
+      void inp.offsetWidth;
+      inp.classList.add('gate-shake');
+      inp.value='';
+      setTimeout(function(){err.style.opacity='0';},2000);
+    }
+  }
+</script>
+
 <button id="export-btn" onclick="exportHTML()" style="display:none">&#8681; Download</button>
 <button id="edit-btn" onclick="toggleEdit()">Edit</button>
 
